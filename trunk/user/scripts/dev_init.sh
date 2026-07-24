@@ -58,7 +58,8 @@ mkdir -p -m 750 /etc/Wireless/RT2860
 mkdir -p -m 750 /etc/Wireless/iNIC
 
 # extract storage files
-mtd_storage.sh load
+# mtd_storage.sh load
+storage_main.sh load
 
 touch /etc/resolv.conf
 
@@ -79,7 +80,6 @@ ln -sf /etc_ro/ipkg.conf /etc/ipkg.conf
 
 ln -sf /etc_ro/hostapd.conf /etc/hostapd.conf
 ln -sf /etc_ro/hostapd_wlan1.conf /etc/hostapd_wlan1.conf
-
 
 echo "/lib/firmware/" > /sys/module/firmware_class/parameters/path
 
