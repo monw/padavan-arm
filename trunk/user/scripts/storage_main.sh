@@ -26,7 +26,6 @@ mount_persistent_media() {
     # CASE 1: Detect and Mount UBI / UBIFS
     # CASE 1: Detect, Adapt, and Dynamically Create UBI / UBIFS
     if [ -d "/sys/class/ubi/ubi0" ] || grep -q "ubi" /proc/devices; then
-        echo "STORAGE INIT: UBI active subsystem matched."
 
         # Sub-step A: Check if any UBIFS volume is already mounted by the kernel
         if grep -q "ubifs" /proc/mounts; then
@@ -38,6 +37,7 @@ mount_persistent_media() {
         # Sub-step B: Dynamically scan existing volumes for standard labels
         ACTIVE_UBI_DEV=""
         if [ -d "/sys/class/ubi/ubi0" ]; then
+            echo "STORAGE INIT: UBI active subsystem matched."
             # Priority 1: Scan for specific volume names in preferential order
             # 'storage' (Padavan), 'ubi_data' (Modern OpenWrt), 'rootfs_data' (Legacy OpenWrt)
             for target_label in "storage" "ubi_data" "rootfs_data"; do
@@ -94,6 +94,7 @@ mount_persistent_media() {
 
     # CASE 2: Detect Legacy NAND MTD Partition (No mount needed, raw block mode)
     if grep -q '"Storage"' /proc/mtd && [ ! -b "/dev/mmcblk0" ]; then
+	echo "STORAGE INIT: Using NAND MTD Partition 'Storage'"
         touch /tmp/.storage_is_nand_mtd
         return 0
     fi
@@ -125,6 +126,8 @@ mount_persistent_media() {
         if [ ! -f "/sys/class/block/$DEV_BASENAME/size" ]; then
             return 1
         fi
+
+        echo "STORAGE INIT: eMMC Reuse RootFS $DEV_BASENAME Partition Tail Space."
 
         TOTAL_SECTORS=$(cat "/sys/class/block/$DEV_BASENAME/size")
         TOTAL_BYTES=$((TOTAL_SECTORS * 512))
@@ -216,11 +219,11 @@ func_restore() {
     [ -d /etc_ro/storage ] && cp -rf /etc_ro/storage/* "$STORAGE_DIR/" 2>/dev/null
     
     # Re-link HTTPS certifications for Padavan web server compatibility
-    if [ "$CONFIG_FIRMWARE_INCLUDE_HTTPS" = "y" ] ; then
-        [ ! -d "$STORAGE_DIR/https" ] && mkdir -p "$STORAGE_DIR/https"
-        [ ! -f "$STORAGE_DIR/https/server.crt" ] && ln -sf /etc_ro/server.crt "$STORAGE_DIR/https/server.crt"
-        [ ! -f "$STORAGE_DIR/https/server.key" ] && ln -sf /etc_ro/server.key "$STORAGE_DIR/https/server.key"
-    fi
+    #if [ "$CONFIG_FIRMWARE_INCLUDE_HTTPS" = "y" ] ; then
+        #[ ! -d "$STORAGE_DIR/https" ] && mkdir -p "$STORAGE_DIR/https"
+        #[ ! -f "$STORAGE_DIR/https/server.crt" ] && ln -sf /etc_ro/server.crt "$STORAGE_DIR/https/server.crt"
+        #[ ! -f "$STORAGE_DIR/https/server.key" ] && ln -sf /etc_ro/server.key "$STORAGE_DIR/https/server.key"
+    #fi
 
     funcs_unlock
 }
@@ -231,7 +234,15 @@ func_save() {
     
     rm -f "$TMP_BZ2_FILE"
     cd "$STORAGE_DIR" || exit 1
-    tar -cjf "$TMP_BZ2_FILE" --exclude=*.tmp --exclude=https/server.crt --exclude=https/server.key * 2>/dev/null
+
+    TMP_LIST="/tmp/storage_vols.txt"
+    find . -type f ! -name "*.tmp" ! -path "./https/server.crt" ! -path "./https/server.key" > "$TMP_LIST" 2>/dev/null
+    find . -type d ! -path "./https" >> "$TMP_LIST" 2>/dev/null
+    if [ -s "$TMP_LIST" ]; then
+        tar -cjf "$TMP_BZ2_FILE" -T "$TMP_LIST" 2>/dev/null
+    fi
+    rm -f "$TMP_LIST"
+
 
     if [ ! -f "$TMP_BZ2_FILE" ]; then
         funcs_unlock
