@@ -767,6 +767,7 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 	int is_url_enabled, is_lwf_enabled;
 	int i_vpns_enable, i_vpns_type, i_vpns_actl, i_http_proto, i_bfplimit_ref;
 	int i_vpnc_enable, i_vpnc_type, i_vpnc_sfw, i_mac_filter;
+	int is_soft_offload_enabled;
 #if defined (APP_OPENVPN)
 	int i_vpns_ov_mode = nvram_get_int("vpns_ov_mode");
 #endif
@@ -795,6 +796,8 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 	i_vpnc_enable  = nvram_get_int("vpnc_enable");
 	i_vpnc_type    = nvram_get_int("vpnc_type");
 	i_vpnc_sfw     = nvram_get_int("vpnc_sfw");
+
+	is_soft_offload_enabled = nvram_match("soft_offload_enable", "1");
 
 	vpnc_if = NULL;
 	if (i_vpnc_enable) {
@@ -1059,6 +1062,18 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 		ret |= MODULE_WEBSTR_MASK;
 	}
 
+	if( is_soft_offload_enabled ){
+		ftype = "ACCEPT";
+		/* 1. Small packets bypass offload: force ACCEPT for packets <= 128 bytes to trigger fq_codel scheduling */
+		fprintf(fp, "-A %s -m length --length 0:128 -m %s %s -j %s\n", dtype, CT_STATE, "ESTABLISHED", ftype);
+		
+		/* 2. Large packets offloaded: forward bulk TCP/UDP data traffic via FLOWOFFLOAD to save CPU cycles */
+		fprintf(fp, "-A %s -p tcp -m %s %s -j FLOWOFFLOAD --hw\n", dtype, CT_STATE, "ESTABLISHED");
+		fprintf(fp, "-A %s -p udp -m %s %s -j FLOWOFFLOAD --hw\n", dtype, CT_STATE, "ESTABLISHED");
+
+
+	}
+
 	/* Clamp TCP MSS to PMTU of WAN interface before accepting RELATED packets */
 	if (!tcp_mss_need) {
 		if (i_vpnc_enable) {
@@ -1247,6 +1262,9 @@ ipt_filter_default(void)
 
 	is_fw_enabled = nvram_match("fw_enable_x", "1");
 
+	int is_soft_offload_enabled = 0;
+	is_soft_offload_enabled = nvram_match("soft_offload_enable", "1");
+
 	if (!(fp=fopen(ipt_file, "w")))
 		return;
 
@@ -1270,6 +1288,17 @@ ipt_filter_default(void)
 	/* FORWARD chain */
 	dtype = "FORWARD";
 	ftype = "ACCEPT";
+
+	/* Inject split-queuing and flowtable rules dynamically based on soft_offload_enabled */
+	if (is_soft_offload_enabled) {
+		/* 1. Small packets bypass offload: force ACCEPT for packets <= 128 bytes to trigger fq_codel scheduling */
+		fprintf(fp, "-A %s -m length --length 0:128 -m %s %s -j %s\n", dtype, CT_STATE, "ESTABLISHED", ftype);
+		/* 2. Large packets offloaded: forward bulk TCP/UDP data traffic via FLOWOFFLOAD to save CPU cycles */
+		fprintf(fp, "-A %s -p tcp -m %s %s -j FLOWOFFLOAD --hw\n", dtype, CT_STATE, "ESTABLISHED");
+		fprintf(fp, "-A %s -p udp -m %s %s -j FLOWOFFLOAD --hw\n", dtype, CT_STATE, "ESTABLISHED");
+	}
+
+
 	fprintf(fp, "-A %s -m %s %s -j %s\n", dtype, CT_STATE, "ESTABLISHED,RELATED", ftype);
 	fprintf(fp, "-A %s -i %s -o %s -j %s\n", dtype, IFNAME_BR, IFNAME_BR, ftype);
 	fprintf(fp, "-A %s -m %s %s -j %s\n", dtype, CT_STATE, "INVALID", "DROP");

@@ -728,6 +728,15 @@ function simplyMAC(fullMAC){
                                                 </select>
                                             </td>
                                         </tr>
+                                        <tr id="row_soft_offload">
+                                            <th><#WAN_Soft_Offload#></a></th>
+                                            <td>
+                                                <select name="soft_offload_enable" class="input">
+                                                    <option value="0" <% nvram_match_x("", "soft_offload_enable", "0", "selected"); %>>Disable</option>
+                                                    <option value="1" <% nvram_match_x("", "soft_offload_enable", "1", "selected"); %>>Enable for Flow Offload</option>
+                                                </select>
+                                            </td>
+                                        </tr>
                                         <tr id="row_wan_poller">
                                             <th><#WAN_Poller#></th>
                                             <td>

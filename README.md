@@ -13,7 +13,7 @@ This is an **ARM-based** port of the Padavan firmware, specifically optimized fo
 The project currently supports development and deployment on:
 - [x] **QEMU** (Emulation for development)
 - [x] **RAX3000M(emmc)** (Physical hardware based on MediaTek MT7981 with emmc)
-- [x] **RAX3000M(nand)** (Physical hardware based on MediaTek MT7981 with nand) ongoing
+- [x] **RAX3000M(nand)** (Physical hardware based on MediaTek MT7981 with nand)
 
 ## Development Progress (Current Status)
 The project is under active development. Key milestones achieved:
@@ -30,13 +30,14 @@ The project is under active development. Key milestones achieved:
   - [x] `2.4Ghz` works.
   - [x] `5Ghz` works, All bandwidth works `20Mhz` `40Mhz` `80Mhz` `160Mhz`
   - [x] User/Psw  Settings is works.
-  - [ ] `Other Settings from WebUI is ongoing.`
+  - [ ] `Guest Wifi` and `Other Settings from WebUI is ongoing.`
 - [x] **Features**: CAKE/QoS with TC.
 - [x] *NVRAM*: Works.
 - [x] *USB*: Works.
 - [x] *LED*: Works.
-- [x] **Web Upgrade**: Works.
+- [x] **Web Upgrade**: Works for emmc board.
   - Supported the sysupgrade style tar to update kerel and rootfs partitions.
+
 - [!] **Note**: Most unenabled features are currently under discovery and fixing.
 
 ### Demo for WebUI
@@ -153,7 +154,7 @@ You can find the binaries from RAX3000M_flash_bins folder.
 2. Flash the "sysupgrade_cmcc_rax3000m-emmc-ubootmod.bin" to the emmc board through uboot.
 
 
-__Partion layout with this rax3000m build__
+__Partion layout with rax3000m emmc build__
 
 https://www.right.com.cn/forum/thread-8400306-1-1.html
 
@@ -197,6 +198,20 @@ Part	Start LBA	End LBA		Name
 		(linux)
 	guid:	493e0f82-59c0-11ee-b4d0-b083fea0360d
 ```
+
+__Partion layout with rax3000m nand build__
+
+```
+> cat /proc/mtd
+dev:    size   erasesize  name
+mtd0: 08000000 00020000 "spi0.0"
+mtd1: 00100000 00020000 "BL2" 
+mtd2: 00080000 00020000 "u-boot-env"
+mtd3: 00200000 00020000 "Factory"
+mtd4: 00200000 00020000 "FIP" 
+mtd5: 07200000 00020000 "ubi"
+```
+
 
 __Disabled Path__
 

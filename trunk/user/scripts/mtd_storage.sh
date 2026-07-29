@@ -248,7 +248,7 @@ func_fill()
 
 	# create started script
 	if [ ! -f "$script_started" ] ; then
-		cat > "$script_started" <<EOF
+		cat > "$script_started" <<'EOF'
 #!/bin/sh
 
 ### Custom user script
@@ -277,6 +277,14 @@ sync && echo 3 > /proc/sys/vm/drop_caches
 #wing <HOST:443> <PASS>
 #wing 192.168.1.9:1080
 #ipset add gfwlist 8.8.4.4
+
+# Opt small packet forwarding
+tc qdisc replace dev eth0 root fq_codel
+tc qdisc replace dev eth1 root fq_codel
+
+for q in /sys/class/net/eth*/queues/tx-*/byte_queue_limits/limit_max; do
+    echo 9000 > "$q";
+done
 
 
 EOF

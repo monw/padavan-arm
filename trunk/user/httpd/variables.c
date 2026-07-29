@@ -302,6 +302,7 @@
 			{"hw_nat_mode", "", NULL, EVM_RESTART_FIREWALL},
 			{"sw_nat_mode", "", NULL, EVM_RESTART_FIREWALL},
 			{"sfe_enable", "", NULL, EVM_RESTART_FIREWALL},
+			{"soft_offload_enable", "", NULL, EVM_RESTART_FIREWALL},
 			{"wan_ipaddr", "", NULL, EVM_RESTART_WAN},
 			{"wan_netmask", "", NULL, EVM_RESTART_WAN},
 			{"wan_gateway", "", NULL, EVM_RESTART_WAN},

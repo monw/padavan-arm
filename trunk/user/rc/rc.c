@@ -234,6 +234,7 @@ load_ipset_modules(void)
 	module_smart_load("ip_set_hash_ip", NULL);
 	module_smart_load("ip_set_hash_mac", NULL);
 	module_smart_load("ip_set_hash_net", NULL);
+	module_smart_load("xt_length", NULL);
 }
 #endif
 
