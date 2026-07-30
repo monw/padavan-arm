@@ -69,6 +69,8 @@
 #define IFNAME_2G_GUEST			"ra1"
 #define IFNAME_2G_APCLI			"apcli0"
 #endif
+
+
 #define IFNAME_2G_WDS0			"wds0"
 #define IFNAME_2G_WDS1			"wds1"
 #define IFNAME_2G_WDS2			"wds2"
@@ -108,6 +110,17 @@
 #define IFNAME_5G_WDS3			"wdsi3"
 #endif
 #endif
+
+
+#undef IFNAME_2G_MAIN
+#undef IFNAME_2G_GUEST
+#undef IFNAME_5G_MAIN
+#undef IFNAME_5G_GUEST
+
+#define IFNAME_2G_MAIN			"wlan0"
+#define IFNAME_2G_GUEST			"wlan0-1"
+#define IFNAME_5G_MAIN			"wlan1"
+#define IFNAME_5G_GUEST			"wlan1-1"
 
 #if defined(USE_RT3352_MII)
 #define IFNAME_INIC_MAIN		IFNAME_2G_MAIN

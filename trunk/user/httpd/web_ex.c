@@ -1361,6 +1361,8 @@ ej_notify_services(int eid, webs_t wp, int argc, char **argv)
 	if ((restart_needed_bits & EVM_RESTART_WIFI2) != 0) {
 		restart_needed_bits &= ~EVM_RESTART_WIFI2;
 		if (rt_modified) {
+			if(rt_modified & WIFI_GUEST_CONTROL_BIT)
+				rt_modified |= WIFI_RADIO_CONTROL_BIT;
 			if (rt_modified & WIFI_COMMON_CHANGE_BIT)
 				notify_rc(RCN_RESTART_WIFI2);
 			else {
@@ -1384,6 +1386,8 @@ ej_notify_services(int eid, webs_t wp, int argc, char **argv)
 		restart_needed_bits &= ~EVM_RESTART_WIFI5;
 #if BOARD_HAS_5G_RADIO
 		if (wl_modified) {
+			if(wl_modified & WIFI_GUEST_CONTROL_BIT)
+				wl_modified |= WIFI_RADIO_CONTROL_BIT;
 			if (wl_modified & WIFI_COMMON_CHANGE_BIT)
 				notify_rc(RCN_RESTART_WIFI5);
 			else {

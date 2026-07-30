@@ -195,6 +195,7 @@ EOF
 
 # Virtual interface block for Guest WiFi setup
 bss=$ifname-1
+bridge=br0
 ssid=$guest_ssid
 ap_isolate=${ap_isolate:-1}
 auth_algs=1

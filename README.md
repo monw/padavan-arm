@@ -30,7 +30,7 @@ The project is under active development. Key milestones achieved:
   - [x] `2.4Ghz` works.
   - [x] `5Ghz` works, All bandwidth works `20Mhz` `40Mhz` `80Mhz` `160Mhz`
   - [x] User/Psw  Settings is works.
-  - [ ] `Guest Wifi` and `Other Settings from WebUI is ongoing.`
+  - [ ] `Other Settings from WebUI is ongoing.`
 - [x] **Features**: CAKE/QoS with TC.
 - [x] *NVRAM*: Works.
 - [x] *USB*: Works.

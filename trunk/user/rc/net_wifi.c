@@ -1165,7 +1165,7 @@ restart_guest_lan_isolation(void)
 	const char *wl_ifname_guest = IFNAME_5G_GUEST;
 
 	bp_isolate = 0;
-	if (is_interface_up(wl_ifname_guest)) {
+	if (is_interface_up(wl_ifname_guest) || 1) {
 		if (nvram_wlan_get_int(1, "guest_lan_isolate")) {
 			if (!is_ap_mode)
 				bp_isolate = 1;
@@ -1178,7 +1178,7 @@ restart_guest_lan_isolation(void)
 #endif
 
 	bp_isolate = 0;
-	if (is_interface_up(rt_ifname_guest)) {
+	if (is_interface_up(rt_ifname_guest) || 1) {
 		if (nvram_wlan_get_int(0, "guest_lan_isolate")) {
 			if (!is_ap_mode)
 				bp_isolate = 1;
