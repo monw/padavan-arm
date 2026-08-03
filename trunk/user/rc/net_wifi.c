@@ -1060,8 +1060,8 @@ control_guest_wl(int guest_on, int manual)
 		br_add_del_if(IFNAME_BR, ifname_ap, 0);
 	}
 
-	if (is_ap_changed)
-		restart_guest_lan_isolation();
+	//if (is_ap_changed)
+	restart_guest_lan_isolation();
 
 	if (is_ap_changed && !manual)
 		logmessage("WiFi scheduler", "5GHz guest AP: %s", (guest_on) ? "ON" : "OFF");
@@ -1165,7 +1165,7 @@ restart_guest_lan_isolation(void)
 	const char *wl_ifname_guest = IFNAME_5G_GUEST;
 
 	bp_isolate = 0;
-	if (is_interface_up(wl_ifname_guest) || 1) {
+	if (is_interface_up(wl_ifname_guest)) {
 		if (nvram_wlan_get_int(1, "guest_lan_isolate")) {
 			if (!is_ap_mode)
 				bp_isolate = 1;
@@ -1174,7 +1174,7 @@ restart_guest_lan_isolation(void)
 		}
 	}
 
-	brport_set_param_int(wl_ifname_guest, "isolate_mode", bp_isolate);
+	brport_set_param_int(wl_ifname_guest, "isolated", bp_isolate);
 #endif
 
 	bp_isolate = 0;
@@ -1193,7 +1193,7 @@ restart_guest_lan_isolation(void)
 		is_need_ebtables &= ~0x01;
 #endif
 
-	brport_set_param_int(rt_ifname_guest, "isolate_mode", bp_isolate);
+	brport_set_param_int(rt_ifname_guest, "isolated", bp_isolate);
 
 	if (!is_ap_mode)
 		return;

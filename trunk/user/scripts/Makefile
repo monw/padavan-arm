@@ -32,4 +32,5 @@ endif
 
 	$(ROMFSINST) /sbin/storage_main.sh
 	$(ROMFSINST) /sbin/sysupgrade-handler.sh
+	$(ROMFSINST) /sbin/sysupgrade-handler-uni.sh
 	

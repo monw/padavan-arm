@@ -419,8 +419,8 @@ config_soft_bridge_wan(int br_id, int vid, int prio, const char *wan_ifname, con
 	if (br_id < 2) {
 		/* set isolation for INET and IPTV bridges */
 		if (nvram_get_int("wan_stb_iso") == SWAPI_WAN_BWAN_ISOLATION_BETWEEN) {
-			brport_set_param_int(wan_ifname, "isolate_mode", 1);
-			brport_set_param_int(bwan_ifname, "isolate_mode", 1);
+			brport_set_param_int(wan_ifname, "isolated", 1);
+			brport_set_param_int(bwan_ifname, "isolated", 1);
 		}
 	} else {
 #if defined (USE_IPV6)

@@ -43,4 +43,6 @@ romfs:
 	$(ROMFSINST) $(THISDIR)/$(SRC_NAME)/ubidetach /sbin/ubidetach
 	$(ROMFSINST) $(THISDIR)/$(SRC_NAME)/ubiformat /sbin/ubiformat
 	$(ROMFSINST) $(THISDIR)/$(SRC_NAME)/ubimkvol /sbin/ubimkvol
+	$(ROMFSINST) $(THISDIR)/$(SRC_NAME)/ubirmvol /sbin/ubirmvol
+	$(ROMFSINST) $(THISDIR)/$(SRC_NAME)/ubiupdatevol /sbin/ubiupdatevol
 	$(ROMFSINST) $(THISDIR)/$(SRC_NAME)/ubinfo /sbin/ubinfo

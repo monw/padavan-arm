@@ -129,6 +129,21 @@ valid_subver(char subfs)
 		return 0;
 }
 
+/*
+void early_file_log(const char *fmt, ...) {
+    FILE *f = fopen("/tmp/early_boot.log", "a");
+    if (f) {
+        va_list args;
+        va_start(args, fmt);
+        
+        vfprintf(f, fmt, args);
+        fprintf(f, "\n");
+        
+        va_end(args);
+        fclose(f);
+    }
+}*/
+
 void
 get_eeprom_params(void)
 {
@@ -155,6 +170,13 @@ get_eeprom_params(void)
 #endif
 	memset(buffer, 0xff, ETHER_ADDR_LEN);
 	i_ret = flash_mtd_read(MTD_PART_NAME_FACTORY, i_offset, buffer, ETHER_ADDR_LEN);
+/*
+	if(i_ret < 0){
+		early_file_log("get_eeprom_params failed to read (%s) at %d! ", MTD_PART_NAME_FACTORY,i_offset);
+	}else{
+		early_file_log("get_eeprom_params flash_mtd_read (%s) at %d is %xllx! ", MTD_PART_NAME_FACTORY,i_offset,*(uint64_t *)buffer);
+	}
+*/
 	if (i_ret >= 0 && !(buffer[0] & 0x01))
 		ether_etoa(buffer, macaddr_wl);
 
@@ -175,8 +197,8 @@ get_eeprom_params(void)
 		if (ether_atoe(macaddr_wl, ea)) {
 			memcpy(buffer, ea, ETHER_ADDR_LEN);
 			strcpy(macaddr_lan, macaddr_wl);
-			if (i_ret >= 0)
-				flash_mtd_write(MTD_PART_NAME_FACTORY, i_offset, ea, ETHER_ADDR_LEN);
+			//if (i_ret >= 0)
+				//flash_mtd_write(MTD_PART_NAME_FACTORY, i_offset, ea, ETHER_ADDR_LEN);
 		}
 	} else {
 		ether_etoa(buffer, macaddr_lan);
@@ -192,6 +214,9 @@ get_eeprom_params(void)
 		i_offset = get_wired_mac_e2p_offset(1);
 		memset(buffer, 0xff, ETHER_ADDR_LEN);
 		i_ret = flash_mtd_read(MTD_PART_NAME_FACTORY, i_offset, buffer, ETHER_ADDR_LEN);
+		/*
+		early_file_log("get_eeprom_params, flash_mtd_read (%s) at 0x%x 0x%llx! ", MTD_PART_NAME_FACTORY,i_offset,*(uint64_t *)buffer);
+		*/
 		if ((buffer[0] & 0x01)
 #if defined (USE_SINGLE_MAC)
 		    /* compare LAN/WAN MAC OID */
@@ -202,8 +227,8 @@ get_eeprom_params(void)
 			buffer[5] |= 0x03;
 			ether_etoa(buffer, macaddr_wan);
 #if !defined (USE_SINGLE_MAC)
-			if (i_ret >= 0)
-				flash_mtd_write(MTD_PART_NAME_FACTORY, i_offset, buffer, ETHER_ADDR_LEN);
+			//if (i_ret >= 0)
+				//flash_mtd_write(MTD_PART_NAME_FACTORY, i_offset, buffer, ETHER_ADDR_LEN);
 #endif
 		} else {
 			ether_etoa(buffer, macaddr_wan);

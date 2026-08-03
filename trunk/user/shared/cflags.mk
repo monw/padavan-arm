@@ -66,6 +66,7 @@ endif # CONFIG_FIRST_IF_NONE
 ifeq ($(CONFIG_PRODUCT),MT7981)
 CFLAGS += -DUSE_WID_2G=7981
 CFLAGS += -DUSE_WID_5G=7981
+CFLAGS += -DCONFIG_MT7981
 endif
 
 ##################################################################
