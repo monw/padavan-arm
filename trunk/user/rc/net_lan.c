@@ -596,18 +596,32 @@ init_bridge(int is_ap_mode){
 		ifconfig(IFNAME_LAN2, IFUP, NULL, NULL);
 		ifconfig(IFNAME_LAN3, IFUP, NULL, NULL);
 		ifconfig(IFNAME_LAN4, IFUP, NULL, NULL);
-                br_add_del_if(IFNAME_BR, IFNAME_LAN1, 1);
-                br_add_del_if(IFNAME_BR, IFNAME_LAN2, 1);
-                br_add_del_if(IFNAME_BR, IFNAME_LAN3, 1);
-                br_add_del_if(IFNAME_BR, IFNAME_LAN4, 1);
+		br_add_del_if(IFNAME_BR, IFNAME_LAN1, 1);
+		br_add_del_if(IFNAME_BR, IFNAME_LAN2, 1);
+		br_add_del_if(IFNAME_BR, IFNAME_LAN3, 1);
+		br_add_del_if(IFNAME_BR, IFNAME_LAN4, 1);
 
 		// MAC2 == eth1 == IFNAME_WAN
-                ifconfig(IFNAME_MAC2, IFUP, NULL, NULL);
-                br_add_del_if(IFNAME_BR, IFNAME_MAC2, 1);
+		ifconfig(IFNAME_MAC2, IFUP, NULL, NULL);
+		br_add_del_if(IFNAME_BR, IFNAME_MAC2, 1);
         }
 // Let bridge trafic directly go through without Nat
 	doSystem("echo 0 >/proc/sys/net/bridge/bridge-nf-call-iptables" );
 
+	int rt_radio_on = get_enabled_radio_rt();
+	//int rt_mode_x = get_mode_radio_rt();  // wlan ap/brige mode.
+	int wl_radio_on = get_enabled_radio_wl();
+
+
+
+#if BOARD_HAS_5G_RADIO
+	start_wifi_ap_wl(wl_radio_on);
+	start_wifi_wds_wl(wl_radio_on);
+	start_wifi_apcli_wl(wl_radio_on);
+#endif
+	start_wifi_ap_rt(rt_radio_on);
+	start_wifi_wds_rt(rt_radio_on);
+	start_wifi_apcli_rt(rt_radio_on);
 
 }
 

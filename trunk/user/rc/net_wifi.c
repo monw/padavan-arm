@@ -452,8 +452,6 @@ void
 start_wifi_ap_wl(int radio_on)
 {
 
-        eval("/usr/bin/hostapd.sh","start_wl");
-
 #if BOARD_HAS_5G_RADIO
 	int i_mode_x = get_mode_radio_wl();
 
@@ -482,13 +480,15 @@ start_wifi_ap_wl(int radio_on)
 			set_wifi_rssi_threshold(IFNAME_5G_GUEST, 1);
 		}
 	}
+
+        eval("/usr/bin/hostapd.sh","start_wl");
+
 #endif
 }
 
 void 
 start_wifi_ap_rt(int radio_on)
 {
-        eval("/usr/bin/hostapd.sh","start_rt");
 	int i_mode_x = get_mode_radio_rt();
 #if defined(USE_RT3352_MII)
 	int is_ap_mode = get_ap_mode();
@@ -541,6 +541,7 @@ start_wifi_ap_rt(int radio_on)
 		}
 	}
 #endif
+        eval("/usr/bin/hostapd.sh","start_rt");
 }
 
 void
@@ -1060,8 +1061,12 @@ control_guest_wl(int guest_on, int manual)
 		br_add_del_if(IFNAME_BR, ifname_ap, 0);
 	}
 
-	//if (is_ap_changed)
-	restart_guest_lan_isolation();
+
+	if (is_ap_changed)
+	{
+		eval("/usr/bin/hostapd.sh","restart_wl");
+		restart_guest_lan_isolation();
+	}
 
 	if (is_ap_changed && !manual)
 		logmessage("WiFi scheduler", "5GHz guest AP: %s", (guest_on) ? "ON" : "OFF");
@@ -1115,8 +1120,12 @@ control_guest_rt(int guest_on, int manual)
 #endif
 	}
 
+
 	if (is_ap_changed)
+	{
+		eval("/usr/bin/hostapd.sh","restart_rt");
 		restart_guest_lan_isolation();
+	}
 
 	if (is_ap_changed && !manual)
 		logmessage("WiFi scheduler", "2.4GHz guest AP: %s", (guest_on) ? "ON" : "OFF");

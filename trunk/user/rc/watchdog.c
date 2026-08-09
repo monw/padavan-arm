@@ -280,7 +280,7 @@ svc_timecheck(void)
 				notify_rc("control_wifi_radio_wl_off");
 		}
 		
-		if (svcStatus[RADIO5_ACTIVE] > 0 && is_interface_up(IFNAME_5G_GUEST) )
+		if (svcStatus[RADIO5_ACTIVE] > 0 )
 		{
 			activeNow = is_guest_allowed_wl();
 			if (activeNow != svcStatus[GUEST5_ACTIVE])
