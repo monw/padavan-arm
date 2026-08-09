@@ -201,7 +201,7 @@ unpack_trx:
 
 clean:
 	make clean -C tools
-	for dir in  $(DIRS); do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir clean ; done
+	for dir in  $(DIRS); do [ ! -d $$dir ] || $(MAKEARCH) -i -C $$dir clean ; done
 	$(MAKEARCH_KERNEL) -C $(LINUXDIR) distclean
 	rm -rf $(STAGEDIR)
 	rm -rf $(ROMFSDIR)

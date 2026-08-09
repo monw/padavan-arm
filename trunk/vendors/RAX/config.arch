@@ -8,7 +8,7 @@ ENDIAN = little
 #
 #CPUFLAGS = -maarch64elf -march=aarch64elf -X --fix-cortex-a53-843419
 #CPUFLAGS = -march=armv8.5-a -mfix-cortex-a53-843419
-CPUFLAGS = -march=armv8-a -mfix-cortex-a53-843419
+CPUFLAGS = -mcpu=cortex-a53 -march=armv8-a+crc+crypto -mtune=cortex-a53 -mfix-cortex-a53-843419
 
 ifeq ($(CONFIG_PRODUCT),MT7621)
 #CPUFLAGS += -mtune=1004kc
