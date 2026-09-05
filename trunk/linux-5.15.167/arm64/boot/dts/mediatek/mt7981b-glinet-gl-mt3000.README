@@ -1,0 +1,11 @@
+mt7981b-glinet-gl-mt3000.dts
+
+Source: ImmortalWrt (openwrt24 branch) mt7981b-glinet-gl-mt3000.dts
+Adapted for monw/padavan-arm by GitHub Copilot Chat Assistant.
+
+Notes:
+- This DTS is placed under trunk/linux-5.15.167/arm64/boot/dts/mediatek/ to match the kernel's DTS layout in this repository.
+- SPI-NAND partitions, console (115200), LEDs, Ethernet and WiFi nodes retained from the source.
+- Build-system integration (device Makefile/targets) was added separately under the mt3000 branch to allow recognition by the build scripts.
+
+Please run a full local build and report any kernel DTS or driver errors; I'll iterate on fixes if needed.
