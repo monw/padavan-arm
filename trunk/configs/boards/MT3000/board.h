@@ -3,7 +3,7 @@
 #define BOARD_PID                "MT3000"
 #define BOARD_NAME                "MT3000"
 #define BOARD_DESC                "The Customed GL-INET MT300 router"
-#define BOARD_VENDOR_NAME        "GL-INET"
+#define BOARD_VENDOR_NAME        "RAX"
 #define BOARD_VENDOR_URL        "http://www.phicomm.com/"
 #define BOARD_MODEL_URL                "http://www.phicomm.com/"
 #define BOARD_BOOT_TIME                30
