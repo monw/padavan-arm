@@ -203,14 +203,8 @@
                         };
 
                         partition@580000 {
-                                label = "log";
-                                reg = <0x580000 0x0040000>;
-                        };
-
-                        partition@5c0000 {
                                 label = "ubi";
-                                reg = <0x5c0000 0xf640000>;
-                                compatible = "linux,ubi";
+                                reg = <0x580000 0xf9a0000>;
                         };
                 };
         };
