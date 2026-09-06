@@ -26,8 +26,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - build_variant: "QEUM"
-            targets: "QEUM MT3000"
+          - build_variant: "QEMU"
+            targets: "QEMU MT3000"
 #          - build_variant: "mt7621-usb-1"
 #            targets: "XY-C1 JCG-836PRO JCG-Y2"
 #          - build_variant: "mt7621-usb-2"
